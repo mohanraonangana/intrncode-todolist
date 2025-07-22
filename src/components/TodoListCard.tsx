@@ -24,9 +24,11 @@ function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
+    setIsClient(true);
     async function fetchTodos() {
       try {
         const todosFromDb = await getTodos();
@@ -103,11 +105,19 @@ function TodoList() {
 
   const progress = total > 0 ? (completed / total) * 100 : 0;
   
-  if (isLoading) {
+  if (isLoading || !isClient) {
     return (
        <div className="space-y-4">
-        <Skeleton className="h-8 w-1/2" />
-        <div className="space-y-2">
+        <div className="flex justify-between mb-2 items-center">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-5 w-32" />
+        </div>
+        <Skeleton className="h-2 w-full" />
+        <div className="flex gap-2 mb-4">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-20" />
+        </div>
+        <div className="space-y-4">
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-3/4" />
