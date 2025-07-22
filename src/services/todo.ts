@@ -11,11 +11,11 @@ export interface Todo {
 }
 
 const todoConverter = {
-  toFirestore(todo: Omit<Todo, 'id'>): DocumentData {
+  toFirestore(todo: Omit<Todo, 'id' | 'createdAt'>): DocumentData {
     return { 
       description: todo.description, 
       completed: todo.completed,
-      createdAt: todo.createdAt,
+      createdAt: new Date(),
     };
   },
   fromFirestore(snapshot: QueryDocumentSnapshot<DocumentData>): Todo {
@@ -36,13 +36,12 @@ export async function getTodos(): Promise<Todo[]> {
   return snapshot.docs.map(doc => doc.data()).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 }
 
-export async function addTodo(description: string): Promise<string> {
+export async function addTodo(todo: Omit<Todo, 'id' | 'createdAt'>): Promise<string> {
     const newTodo: Omit<Todo, 'id'> = {
-        description,
-        completed: false,
+        ...todo,
         createdAt: new Date(),
     };
-    const docRef = await addDoc(todosCollection, newTodo);
+    const docRef = await addDoc(collection(db, 'todos'), newTodo);
     return docRef.id;
 }
 

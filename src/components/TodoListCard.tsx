@@ -49,8 +49,12 @@ function TodoList() {
     if (!newTodo.trim()) return;
     
     try {
-      const newTodoId = await addTodo(newTodo);
-      setTodos([...todos, { id: newTodoId, description: newTodo, completed: false, createdAt: new Date() }]);
+      const newTodoData: Omit<Todo, 'id' | 'createdAt'> = {
+        description: newTodo.trim(),
+        completed: false
+      };
+      const newId = await addTodo(newTodoData);
+      setTodos([...todos, { ...newTodoData, id: newId, createdAt: new Date() }]);
       setNewTodo('');
     } catch(error) {
        toast({
@@ -63,9 +67,10 @@ function TodoList() {
 
   const handleToggleTodo = async (id: string, completed: boolean) => {
     try {
-      await updateTodoStatus(id, completed);
       setTodos(todos.map(todo => todo.id === id ? { ...todo, completed } : todo));
+      await updateTodoStatus(id, completed);
     } catch(error) {
+      setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !completed } : todo));
       toast({
           variant: 'destructive',
           title: 'Error updating todo',
@@ -75,10 +80,12 @@ function TodoList() {
   };
 
   const handleDeleteTodo = async (id: string) => {
+    const originalTodos = [...todos];
     try {
-      await deleteTodo(id);
       setTodos(todos.filter(todo => todo.id !== id));
+      await deleteTodo(id);
     } catch(error) {
+       setTodos(originalTodos);
        toast({
           variant: 'destructive',
           title: 'Error deleting todo',
@@ -126,7 +133,7 @@ function TodoList() {
       </form>
       <div className="flex flex-col gap-3">
         {todos.map(todo => (
-          <div key={todo.id} className="flex items-center gap-3 transition-all duration-300">
+          <div key={todo.id} className="flex items-center gap-3 transition-all duration-300 animate-in fade-in-0 slide-in-from-top-2">
             <Checkbox
               id={todo.id}
               checked={todo.completed}
