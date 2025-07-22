@@ -151,8 +151,8 @@ function TodoList() {
             >
               {todo.description}
             </label>
-            <Button variant="ghost" size="icon" onClick={() => handleDeleteTodo(todo.id)}>
-              <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+            <Button variant="ghost" size="icon" onClick={() => handleDeleteTodo(todo.id)} className="group" disabled={!todo.completed}>
+              <Trash2 className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-destructive" />
             </Button>
           </div>
         ))}
