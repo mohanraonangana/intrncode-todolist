@@ -31,14 +31,27 @@ const prompt = ai.definePrompt({
   name: 'generateTaskListPrompt',
   input: {schema: GenerateTaskListInputSchema},
   output: {schema: GenerateTaskListOutputSchema},
-  prompt: `You are an expert in creating learning plans.
+  prompt: `You are an expert in creating learning plans for software development.
 
-  Given the topic the user wants to learn, create a step-by-step task list with estimated times for each task.
+  Given the topic "{{input}}", create a step-by-step task list with estimated times for each task.
   The task list should be personalized and optimized for skill acquisition.
+  The user wants to build a RESTful API for managing todos.
+  
+  Focus on these learning objectives:
+  - Understand REST API principles and HTTP methods
+  - Learn database operations (CRUD) with SQL/NoSQL
+  - Master Express.js routing and middleware (or Next.js API Routes)
+  - Practice API testing and documentation
+  - Implement proper error handling
 
-  Topic: {{{input}}}
-
-  Task List (JSON array):
+  Here is a suggested structure, but you can adapt it.
+  Step 1: Understanding Basics
+  Step 2: Project Setup
+  Step 3: Database Integration (with Firebase/Firestore)
+  Step 4: API Endpoints (CRUD for todos)
+  Step 5: Error Handling & Validation
+  
+  Generate a JSON array of tasks based on this.
   `,
 });
 
